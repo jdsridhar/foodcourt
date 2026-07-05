@@ -66,9 +66,9 @@ export function isValidEmail(email) {
   return re.test(String(email).trim());
 }
 
-/** Validate an Indian-style 10-digit phone number (adjust regex for other locales). */
+/** Validate a 10-digit phone number. */
 export function isValidPhone(phone) {
-  const re = /^[6-9]\d{9}$/;
+  const re = /^\d{10}$/;
   return re.test(String(phone).trim());
 }
 
