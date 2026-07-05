@@ -407,7 +407,7 @@ export function initAdminOrders() {
 
     tableBody.innerHTML =
       pageItems.length === 0
-        ? `<tr><td colspan="6" class="text-center text-muted py-4">No orders found.</td></tr>`
+        ? `<tr><td colspan="7" class="text-center text-muted py-4">No orders found.</td></tr>`
         : pageItems
             .map(
               (o) => `
@@ -418,6 +418,7 @@ export function initAdminOrders() {
           <td>${formatCurrency(o.subtotal)}</td>
           <td><span class="badge ${statusBadgeClass(o.status)}">${capitalize(o.status)}</span></td>
           <td>${escapeHtml(o.customerName || "Guest")}</td>
+          <td>${escapeHtml(o.customerPhone || "-")}</td>
         </tr>`
             )
             .join("");
@@ -445,6 +446,7 @@ export function initAdminOrders() {
         Stall: stallNames[o.stallId] || "-",
         Table: o.tableNumber,
         Customer: o.customerName || "Guest",
+        Phone: o.customerPhone || "-",
         Amount: o.subtotal,
         Status: o.status,
         PlacedAt: formatDateTime(o.createdAt)
