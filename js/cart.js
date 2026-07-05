@@ -67,9 +67,10 @@ export function getCartTotal() {
 }
 
 /** Group cart items by stallId -> [items]. Used to split an order per stall for managers. */
-export function groupCartByStall() {
+export function groupCartByStall(cartArray) {
   const groups = {};
-  getCart().forEach((ci) => {
+  const list = cartArray || getCart();
+  list.forEach((ci) => {
     if (!groups[ci.stallId]) groups[ci.stallId] = [];
     groups[ci.stallId].push(ci);
   });
@@ -99,7 +100,7 @@ export function renderCartPage(stallNamesById = {}) {
     return;
   }
 
-  const groups = groupCartByStall();
+  const groups = groupCartByStall(cart);
   container.innerHTML = Object.entries(groups)
     .map(([stallId, items]) => {
       const stallName = stallNamesById[stallId] || "Stall";
@@ -109,7 +110,9 @@ export function renderCartPage(stallNamesById = {}) {
         <ul class="list-group list-group-flush">
           ${items
             .map((item) => {
-              const globalIndex = cart.indexOf(item);
+              const globalIndex = cart.findIndex(
+                (ci) => ci.itemId === item.itemId && ci.instructions === item.instructions
+              );
               return `
               <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div>
