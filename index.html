@@ -25,10 +25,18 @@
       <img data-app-logo src="assets/logos/default-logo.svg" alt="Logo" onerror="this.style.display='none'">
       <span data-app-name>FoodStreet</span>
     </a>
-    <a href="customer/cart.html" class="btn btn-outline-primary position-relative cart-icon-btn">
-      <i class="bi bi-cart3"></i> Cart
-      <span class="badge rounded-pill d-none" data-cart-count>0</span>
-    </a>
+    <div class="d-flex align-items-center gap-2">
+      <a href="manager/login.html" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-person-lock me-1"></i>Staff Login
+      </a>
+      <a href="customer/order-status.html" class="btn btn-sm btn-outline-success">
+        <i class="bi bi-receipt me-1"></i>Track Order
+      </a>
+      <a href="customer/cart.html" class="btn btn-sm btn-outline-primary position-relative cart-icon-btn">
+        <i class="bi bi-cart3 me-1"></i>Cart
+        <span class="badge rounded-pill d-none" data-cart-count>0</span>
+      </a>
+    </div>
   </div>
 </nav>
 

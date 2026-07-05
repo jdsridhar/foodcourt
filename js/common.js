@@ -43,30 +43,6 @@ export function initCommonLayout() {
       </div>
     </div>`;
   document.body.appendChild(confirmModal);
-  showTrackOrderButton();
-}
-
-/** Dynamically inject a "Track Order" button into the customer navbar if they have an active checkout session. */
-export function showTrackOrderButton() {
-  const checkoutId = localStorage.getItem("foodstreet_checkout_id");
-  if (!checkoutId) return;
-
-  const path = window.location.pathname;
-  if (path.includes("/manager/") || path.includes("/admin/")) return;
-
-  const cartBtn = document.querySelector(".cart-icon-btn");
-  if (!cartBtn || document.getElementById("trackOrderNavbarBtn")) return;
-
-  const trackBtn = document.createElement("a");
-  trackBtn.id = "trackOrderNavbarBtn";
-  const isSubdir = path.includes("/customer/");
-  const href = isSubdir ? `order-status.html?checkoutId=${checkoutId}` : `customer/order-status.html?checkoutId=${checkoutId}`;
-
-  trackBtn.href = href;
-  trackBtn.className = "btn btn-outline-success me-2";
-  trackBtn.innerHTML = `<i class="bi bi-receipt"></i> Track Order`;
-
-  cartBtn.parentNode.insertBefore(trackBtn, cartBtn);
 }
 
 /** Fetch the single global food street settings document (name, currency, tax, logo, prefix). */

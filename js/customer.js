@@ -204,6 +204,13 @@ export function initMenuBrowsing() {
         instructions
       });
       showToast(`${item.name} added to cart.`, "success");
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 120,
+          spread: 70,
+          origin: { y: 0.75 }
+        });
+      }
       bootstrap.Modal.getInstance(modalEl).hide();
       renderItems();
     };

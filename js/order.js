@@ -60,13 +60,13 @@ export async function placeOrder({ tableNumber, customerName, customerPhone, ord
   });
 
   await Promise.all(writes);
-  sessionStorage.setItem(CHECKOUT_KEY, checkoutId);
+  localStorage.setItem(CHECKOUT_KEY, checkoutId);
   clearCart();
   return checkoutId;
 }
 
 export function getLastCheckoutId() {
-  return sessionStorage.getItem(CHECKOUT_KEY) || "";
+  return localStorage.getItem(CHECKOUT_KEY) || "";
 }
 
 const STATUS_STEPS = ["pending", "accepted", "preparing", "ready", "delivered"];
