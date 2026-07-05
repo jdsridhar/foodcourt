@@ -189,10 +189,22 @@ export function initManagerOrders(stallId) {
     const dateVal = dateFilter?.value || "";
     return allOrders.filter((o) => {
       const matchesStatus = !status || o.status === status;
+      
+      const orderNum = o.orderNumber.toLowerCase();
+      const table = `table ${o.tableNumber}`.toLowerCase();
+      const amount = String(o.subtotal).toLowerCase();
+      const ordStatus = o.status.toLowerCase();
+      const itemsSummary = o.items.map((i) => i.name.toLowerCase()).join(" ");
+
       const matchesTerm =
         !term ||
-        o.orderNumber.toLowerCase().includes(term) ||
-        String(o.tableNumber).toLowerCase().includes(term);
+        orderNum.includes(term) ||
+        table.includes(term) ||
+        o.tableNumber.toString().includes(term) ||
+        amount.includes(term) ||
+        ordStatus.includes(term) ||
+        itemsSummary.includes(term);
+
       const matchesDate = !dateVal || isSameDay(toDate(o.createdAt), new Date(dateVal));
       return matchesStatus && matchesTerm && matchesDate;
     });

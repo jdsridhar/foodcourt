@@ -390,10 +390,26 @@ export function initAdminOrders() {
     const dateVal = dateFilter?.value || "";
     return allOrders.filter((o) => {
       const matchesStatus = !status || o.status === status;
+      
+      const orderNum = o.orderNumber.toLowerCase();
+      const stallName = (stallNames[o.stallId] || "").toLowerCase();
+      const table = `table ${o.tableNumber}`.toLowerCase();
+      const amount = String(o.subtotal).toLowerCase();
+      const ordStatus = o.status.toLowerCase();
+      const custName = (o.customerName || "").toLowerCase();
+      const custPhone = (o.customerPhone || "").toLowerCase();
+
       const matchesTerm =
         !term ||
-        o.orderNumber.toLowerCase().includes(term) ||
-        (stallNames[o.stallId] || "").toLowerCase().includes(term);
+        orderNum.includes(term) ||
+        stallName.includes(term) ||
+        table.includes(term) ||
+        o.tableNumber.toString().includes(term) ||
+        amount.includes(term) ||
+        ordStatus.includes(term) ||
+        custName.includes(term) ||
+        custPhone.includes(term);
+
       const matchesDate = !dateVal || isSameDay(toDate(o.createdAt), new Date(dateVal));
       return matchesStatus && matchesTerm && matchesDate;
     });
