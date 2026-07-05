@@ -38,6 +38,11 @@
         <hr>
         <form id="checkoutForm" class="needs-validation" novalidate>
           <div class="mb-3">
+            <label class="form-label">Table Number</label>
+            <input type="text" class="form-control" id="tableNumberInput" placeholder="E.g., 5 or Takeaway" required>
+            <div class="invalid-feedback">Please enter a table number.</div>
+          </div>
+          <div class="mb-3">
             <label class="form-label">Your Name</label>
             <input type="text" class="form-control" id="customerName" placeholder="Guest" required>
             <div class="invalid-feedback">Please enter your name.</div>
@@ -69,7 +74,18 @@
 
   initCommonLayout();
   updateCartBadge();
-  document.getElementById("tableNumberDisplay").textContent = getTableNumber() || "-";
+
+  const tableInput = document.getElementById("tableNumberInput");
+  const tableDisplay = document.getElementById("tableNumberDisplay");
+  const initialTable = getTableNumber();
+  if (tableInput) tableInput.value = initialTable;
+  if (tableDisplay) tableDisplay.textContent = initialTable || "Not detected";
+
+  if (tableInput && tableDisplay) {
+    tableInput.addEventListener("input", () => {
+      tableDisplay.textContent = tableInput.value.trim() || "Not detected";
+    });
+  }
 
   let settings = { currency: "₹", taxPercent: 5, orderPrefix: "FS" };
 
@@ -100,10 +116,11 @@
   const form = document.getElementById("checkoutForm");
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const tableNumber = tableInput ? tableInput.value.trim() : "";
     const name = document.getElementById("customerName").value.trim();
     const phone = document.getElementById("customerPhone").value.trim();
 
-    if (!isValidPhone(phone) || getCart().length === 0) {
+    if (!isValidPhone(phone) || !isRequired(tableNumber) || getCart().length === 0) {
       form.classList.add("was-validated");
       if (getCart().length === 0) showToast("Your cart is empty.", "warning");
       return;
@@ -112,11 +129,13 @@
     showLoader(true);
     try {
       const checkoutId = await placeOrder({
-        tableNumber: getTableNumber(),
+        tableNumber: tableNumber,
         customerName: name || "Guest",
         customerPhone: phone,
         orderPrefix: settings.orderPrefix
       });
+      // Save the updated table number back to sessionStorage in case they modified it
+      sessionStorage.setItem("foodstreet_table_number", tableNumber);
       window.location.href = `order-status.html?checkoutId=${checkoutId}`;
     } catch (err) {
       console.error(err);
