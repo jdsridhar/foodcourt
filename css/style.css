@@ -1,0 +1,334 @@
+/* ============================================================
+   style.css
+   Global theme for the FoodStreet Digital Ordering System.
+   Modern food-ordering look built on Bootstrap 5 + Poppins.
+   ============================================================ */
+
+:root {
+  --color-primary: #FF6B35;
+  --color-secondary: #FFF4EC;
+  --color-accent: #2ECC71;
+  --color-bg: #F8F9FA;
+  --color-dark: #212529;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --shadow-soft: 0 8px 24px rgba(33, 37, 41, 0.08);
+  --shadow-hover: 0 14px 32px rgba(255, 107, 53, 0.18);
+  --transition-fast: all 0.2s ease;
+  --transition-med: all 0.35s ease;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+  background-color: var(--color-bg);
+  color: var(--color-dark);
+  scroll-behavior: smooth;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------------- Buttons ---------------- */
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  transition: var(--transition-fast);
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #e6592a;
+  border-color: #e6592a;
+  transform: translateY(-1px);
+}
+.btn-accent {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  transition: var(--transition-fast);
+}
+.btn-accent:hover {
+  background-color: #27ae60;
+  color: #fff;
+  transform: translateY(-1px);
+}
+.btn-outline-primary {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn-outline-primary:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* ---------------- Navbar ---------------- */
+.app-navbar {
+  background-color: #fff;
+  box-shadow: var(--shadow-soft);
+  padding: 0.75rem 0;
+}
+.app-navbar .navbar-brand {
+  font-weight: 700;
+  color: var(--color-primary) !important;
+  font-size: 1.4rem;
+}
+.app-navbar .navbar-brand img {
+  height: 36px;
+  margin-right: 8px;
+}
+.cart-icon-btn {
+  position: relative;
+}
+.cart-icon-btn .badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: var(--color-accent);
+}
+
+/* ---------------- Hero ---------------- */
+.hero-section {
+  background: linear-gradient(135deg, var(--color-primary), #ff8a5c);
+  color: #fff;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: 3rem 1rem;
+  margin-bottom: 2rem;
+}
+.hero-section h1 {
+  font-weight: 700;
+}
+.hero-section .table-badge {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 0.5rem 1.25rem;
+  display: inline-block;
+  font-weight: 600;
+}
+
+/* ---------------- Cards ---------------- */
+.card {
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-med);
+  overflow: hidden;
+}
+.stall-card, .menu-item-card {
+  cursor: pointer;
+}
+.stall-card:hover, .menu-item-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+.card-img-top {
+  height: 160px;
+  object-fit: cover;
+  background-color: var(--color-secondary);
+}
+.card-title {
+  font-weight: 600;
+}
+
+/* ---------------- Empty state ---------------- */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #9a9a9a;
+}
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* ---------------- Skeleton loading ---------------- */
+.skeleton-card {
+  pointer-events: none;
+}
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 6px;
+}
+.skeleton-img {
+  height: 160px;
+  width: 100%;
+  border-radius: 0;
+}
+.skeleton-line {
+  height: 14px;
+  margin: 8px 0;
+}
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* ---------------- Loading overlay ---------------- */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(33, 37, 41, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1090;
+}
+
+/* ---------------- Sidebar (manager/admin) ---------------- */
+.app-sidebar {
+  background-color: #fff;
+  min-height: 100vh;
+  box-shadow: var(--shadow-soft);
+  padding: 1.5rem 1rem;
+}
+.app-sidebar .nav-link {
+  color: var(--color-dark);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1rem;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+.app-sidebar .nav-link i {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+.app-sidebar .nav-link:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+}
+.app-sidebar .nav-link.active {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* ---------------- Stat cards ---------------- */
+.stat-card {
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+.stat-card .stat-icon {
+  font-size: 1.8rem;
+  opacity: 0.85;
+}
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.stat-card.bg-orange { background: linear-gradient(135deg, #FF6B35, #ff9166); }
+.stat-card.bg-green { background: linear-gradient(135deg, #2ECC71, #58d68d); }
+.stat-card.bg-blue { background: linear-gradient(135deg, #3498db, #5dade2); }
+.stat-card.bg-purple { background: linear-gradient(135deg, #8e44ad, #af7ac5); }
+.stat-card.bg-dark { background: linear-gradient(135deg, #34495e, #5d6d7e); }
+
+/* ---------------- Order timeline ---------------- */
+.order-timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+.order-timeline::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 5%;
+  right: 5%;
+  height: 3px;
+  background: #e9ecef;
+  z-index: 0;
+}
+.timeline-step {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  flex: 1;
+}
+.timeline-dot {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  background: #e9ecef;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px #e9ecef;
+}
+.timeline-step.done .timeline-dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+.timeline-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+.timeline-step.done .timeline-label {
+  color: var(--color-dark);
+  font-weight: 600;
+}
+
+/* ---------------- Quantity control ---------------- */
+.qty-control .btn {
+  width: 32px;
+}
+
+/* ---------------- Peak hours mini chart ---------------- */
+#peakHoursChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 140px;
+}
+.peak-hour-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  height: 100%;
+}
+.peak-hour-fill {
+  width: 100%;
+  background-color: var(--color-primary);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+}
+.peak-hour-label {
+  font-size: 0.55rem;
+  color: #adb5bd;
+  margin-top: 2px;
+}
+
+/* ---------------- Auth pages ---------------- */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-bg));
+}
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  padding: 2.5rem;
+}
+
+/* ---------------- Footer ---------------- */
+.app-footer {
+  padding: 1.5rem 0;
+  text-align: center;
+  color: #9a9a9a;
+  font-size: 0.85rem;
+}
+
+/* ---------------- Utility ---------------- */
+.bg-secondary-subtle { background-color: var(--color-secondary) !important; }
+.text-accent { color: var(--color-accent) !important; }
+.bg-accent { background-color: var(--color-accent) !important; }
+.cursor-pointer { cursor: pointer; }
+.rounded-xl { border-radius: var(--radius-lg) !important; }

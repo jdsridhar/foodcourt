@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FoodStreet – Scan your table QR code, browse every stall's menu, and place your order in one checkout. Fast, easy, contactless food ordering.">
+<meta name="theme-color" content="#FF6B35">
+<meta property="og:title" content="FoodStreet – Digital Food Ordering">
+<meta property="og:description" content="Scan. Browse. Order. Enjoy your meal from every stall in one place.">
+<meta property="og:type" content="website">
+<title>FoodStreet - Digital Food Ordering</title>
+<link rel="icon" href="assets/icons/favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar app-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img data-app-logo src="assets/logos/default-logo.svg" alt="Logo" onerror="this.style.display='none'">
+      <span data-app-name>FoodStreet</span>
+    </a>
+    <a href="customer/cart.html" class="btn btn-outline-primary position-relative cart-icon-btn">
+      <i class="bi bi-cart3"></i> Cart
+      <span class="badge rounded-pill d-none" data-cart-count>0</span>
+    </a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero-section">
+  <div class="container text-center">
+    <h1><i class="bi bi-qr-code-scan me-2"></i>Welcome to FoodStreet</h1>
+    <p class="mb-3">Scan. Browse. Order. Enjoy your meal from every stall in one place.</p>
+    <span class="table-badge" id="tableBadge"><i class="bi bi-geo-alt-fill me-1"></i>Table: <span id="tableNumberDisplay">Not detected</span></span>
+  </div>
+</section>
+
+<!-- Stalls -->
+<main class="container pb-5">
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 gap-2">
+    <h4 class="mb-0"><i class="bi bi-shop me-2 text-primary"></i>Explore Food Stalls</h4>
+    <div class="input-group" style="max-width: 320px;">
+      <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+      <input type="text" id="stallSearchInput" class="form-control" placeholder="Search stalls...">
+    </div>
+  </div>
+  <div class="row g-4" id="stallGrid"></div>
+</main>
+
+<footer class="app-footer">
+  &copy; 2026 <span data-app-name>FoodStreet</span>. All rights reserved.
+</footer>
+
+<script type="module">
+  import { initCommonLayout, getFoodStreetSettings, applyBranding } from "./js/common.js";
+  import { captureTableNumber, initStallListing } from "./js/customer.js";
+  import { updateCartBadge } from "./js/cart.js";
+
+  initCommonLayout();
+  updateCartBadge();
+
+  const table = captureTableNumber();
+  document.getElementById("tableNumberDisplay").textContent = table || "Not detected";
+
+  getFoodStreetSettings().then(applyBranding);
+  initStallListing();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "foodStreetName": "FoodStreet",
+  "logoUrl": "",
+  "currency": "₹",
+  "taxPercent": 5,
+  "orderPrefix": "FS"
+}

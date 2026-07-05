@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Manage food stalls on FoodStreet – add, edit, activate or deactivate stalls.">
+<meta name="theme-color" content="#FF6B35">
+<meta name="robots" content="noindex, nofollow">
+<title>Manage Stalls - Admin - FoodStreet</title>
+<link rel="icon" href="../assets/icons/favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+    <aside class="col-12 col-md-3 col-lg-2 app-sidebar">
+      <h5 class="mb-4 text-primary"><i class="bi bi-shield-lock me-2"></i>Admin Panel</h5>
+      <nav class="nav flex-column">
+        <a class="nav-link" href="dashboard.html"><i class="bi bi-speedometer2"></i>Dashboard</a>
+        <a class="nav-link active" href="stalls.html"><i class="bi bi-shop"></i>Manage Stalls</a>
+        <a class="nav-link" href="managers.html"><i class="bi bi-people"></i>Manage Managers</a>
+        <a class="nav-link" href="orders.html"><i class="bi bi-receipt"></i>Orders</a>
+        <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-line"></i>Analytics</a>
+        <a class="nav-link" href="settings.html"><i class="bi bi-gear"></i>Settings</a>
+        <a class="nav-link text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i>Logout</a>
+      </nav>
+    </aside>
+
+    <main class="col-12 col-md-9 col-lg-10 py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0"><i class="bi bi-shop me-2 text-primary"></i>Manage Stalls</h4>
+        <button class="btn btn-primary" id="addStallBtn"><i class="bi bi-plus-lg me-1"></i>Add Stall</button>
+      </div>
+      <div class="row g-4" id="stallsGrid"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Add/Edit Stall Modal -->
+<div class="modal fade" id="stallModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stallModalTitle">Add Stall</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="stallForm" class="needs-validation" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Stall Name</label>
+            <input type="text" class="form-control" id="stallName" required>
+            <div class="invalid-feedback">Stall name is required.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" id="stallDescription" rows="2"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Stall Logo</label>
+            <input type="file" class="form-control" id="stallLogo" accept="image/*">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="stallSaveBtn"><i class="bi bi-check-lg me-1"></i>Save Stall</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initCommonLayout } from "../js/common.js";
+  import { requireRole, logout } from "../js/auth.js";
+  import { initStallManagement } from "../js/admin.js";
+
+  initCommonLayout();
+  requireRole("admin", "login.html").then(() => initStallManagement());
+
+  document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    logout("login.html");
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

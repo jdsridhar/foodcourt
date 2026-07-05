@@ -1,0 +1,38 @@
+rules_version = '2';
+
+/**
+ * Firebase Storage Security Rules - FoodStreet Digital Ordering System
+ * Paths:
+ *   menuItems/{stallId}/...   - food item images, managed by that stall's manager or admin
+ *   stallLogos/{stallId}/...  - stall logos, managed by that stall's manager or admin
+ *   settings/...              - global food street logo, admin only
+ * All images are publicly readable (needed for the unauthenticated customer menu).
+ */
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidImage() {
+      return request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    match /menuItems/{stallId}/{fileName} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidImage();
+    }
+
+    match /stallLogos/{stallId}/{fileName} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidImage();
+    }
+
+    match /settings/{fileName} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidImage();
+    }
+  }
+}

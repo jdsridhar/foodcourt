@@ -1,0 +1,17 @@
+{
+  "name": "foodcourt",
+  "version": "1.0.0",
+  "description": "A production-ready, serverless food-court ordering system. Customers scan a table QR code, browse every stall's menu, place a single checkout that can span multiple stalls, and track their order live. Each stall manager sees only their own orders in real time. Admins get full control over stalls, managers, orders, analytics and system settings.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "firebase-admin": "^14.1.0",
+    "firebase-tools": "^15.22.4"
+  }
+}

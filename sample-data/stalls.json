@@ -1,0 +1,30 @@
+[
+  {
+    "id": "stall-pizza-point",
+    "name": "Pizza Point",
+    "description": "Wood-fired pizzas made fresh to order.",
+    "logoUrl": "",
+    "status": "active"
+  },
+  {
+    "id": "stall-burger-barn",
+    "name": "Burger Barn",
+    "description": "Juicy grilled burgers and crispy fries.",
+    "logoUrl": "",
+    "status": "active"
+  },
+  {
+    "id": "stall-juice-junction",
+    "name": "Juice Junction",
+    "description": "Fresh fruit juices and refreshing mocktails.",
+    "logoUrl": "",
+    "status": "active"
+  },
+  {
+    "id": "stall-noodle-house",
+    "name": "Noodle House",
+    "description": "Wok-tossed noodles and Asian street food.",
+    "logoUrl": "",
+    "status": "inactive"
+  }
+]

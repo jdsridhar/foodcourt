@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FFF4EC"/>
+  <circle cx="200" cy="120" r="55" fill="#FF6B35" opacity="0.85"/>
+  <rect x="140" y="185" width="120" height="14" rx="7" fill="#FF6B35" opacity="0.5"/>
+  <rect x="160" y="210" width="80" height="10" rx="5" fill="#FF6B35" opacity="0.3"/>
+  <text x="200" y="270" font-family="Poppins, sans-serif" font-size="16" fill="#c77a54" text-anchor="middle">No Image Available</text>
+</svg>

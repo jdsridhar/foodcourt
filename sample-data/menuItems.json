@@ -1,0 +1,13 @@
+[
+  { "stallId": "stall-pizza-point", "name": "Margherita Pizza", "category": "Pizza", "price": 249, "description": "Classic cheese and tomato pizza.", "imageUrl": "", "available": true },
+  { "stallId": "stall-pizza-point", "name": "Farmhouse Pizza", "category": "Pizza", "price": 299, "description": "Loaded with fresh veggies.", "imageUrl": "", "available": true },
+  { "stallId": "stall-pizza-point", "name": "Garlic Bread", "category": "Starters", "price": 129, "description": "Toasted bread with garlic butter.", "imageUrl": "", "available": true },
+
+  { "stallId": "stall-burger-barn", "name": "Classic Cheese Burger", "category": "Burgers", "price": 159, "description": "Beef-style patty with melted cheese.", "imageUrl": "", "available": true },
+  { "stallId": "stall-burger-barn", "name": "Crispy Veg Burger", "category": "Burgers", "price": 139, "description": "Crispy veg patty with fresh lettuce.", "imageUrl": "", "available": true },
+  { "stallId": "stall-burger-barn", "name": "French Fries", "category": "Sides", "price": 99, "description": "Crispy golden fries.", "imageUrl": "", "available": false },
+
+  { "stallId": "stall-juice-junction", "name": "Mango Smoothie", "category": "Smoothies", "price": 89, "description": "Fresh mango blended smoothie.", "imageUrl": "", "available": true },
+  { "stallId": "stall-juice-junction", "name": "Watermelon Juice", "category": "Juices", "price": 69, "description": "Chilled fresh watermelon juice.", "imageUrl": "", "available": true },
+  { "stallId": "stall-juice-junction", "name": "Virgin Mojito", "category": "Mocktails", "price": 99, "description": "Refreshing lime and mint mocktail.", "imageUrl": "", "available": true }
+]

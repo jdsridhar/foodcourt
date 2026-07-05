@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Configure global settings for FoodStreet – branding, currency, tax, order prefix, change password, and generate table QR codes.">
+<meta name="theme-color" content="#FF6B35">
+<meta name="robots" content="noindex, nofollow">
+<title>Settings - Admin - FoodStreet</title>
+<link rel="icon" href="../assets/icons/favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/responsive.css" rel="stylesheet">
+<!-- Load browser version of qrcode library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.1/qrcode.min.js"></script>
+<style>
+  /* Custom card styling for printable QR labels */
+  .qr-print-card {
+    background-color: #fff;
+    border-radius: var(--radius-md);
+    transition: var(--transition-fast);
+  }
+  .qr-print-card:hover {
+    box-shadow: var(--shadow-hover);
+  }
+  .qr-code-container canvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+
+  /* Printing styles */
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #qrGrid, #qrGrid * {
+      visibility: visible;
+    }
+    #qrGrid {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      display: flex !important;
+      flex-wrap: wrap !important;
+    }
+    .qr-card-actions {
+      display: none !important;
+    }
+    .qr-print-card-wrapper {
+      width: 48% !important;
+      margin: 1% !important;
+      display: inline-block !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .d-none-print {
+      display: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+    <aside class="col-12 col-md-3 col-lg-2 app-sidebar">
+      <h5 class="mb-4 text-primary"><i class="bi bi-shield-lock me-2"></i>Admin Panel</h5>
+      <nav class="nav flex-column">
+        <a class="nav-link" href="dashboard.html"><i class="bi bi-speedometer2"></i>Dashboard</a>
+        <a class="nav-link" href="stalls.html"><i class="bi bi-shop"></i>Manage Stalls</a>
+        <a class="nav-link" href="managers.html"><i class="bi bi-people"></i>Manage Managers</a>
+        <a class="nav-link" href="orders.html"><i class="bi bi-receipt"></i>Orders</a>
+        <a class="nav-link" href="analytics.html"><i class="bi bi-bar-chart-line"></i>Analytics</a>
+        <a class="nav-link active" href="settings.html"><i class="bi bi-gear"></i>Settings</a>
+        <a class="nav-link text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i>Logout</a>
+      </nav>
+    </aside>
+
+    <main class="col-12 col-md-9 col-lg-10 py-4">
+      <h4 class="mb-4"><i class="bi bi-gear me-2 text-primary"></i>Food Street Settings</h4>
+
+      <div class="row g-4 mb-4">
+        <!-- Global Branding Settings -->
+        <div class="col-12 col-lg-6">
+          <div class="card p-4 h-100">
+            <h5 class="mb-3">Global Configuration</h5>
+            <form id="settingsForm" class="needs-validation" novalidate>
+              <div class="mb-3 text-center">
+                <img id="logoPreview" src="../assets/images/placeholder-food.svg" class="rounded mb-2" width="90" height="90" style="object-fit:cover;">
+                <input type="file" class="form-control" id="logoInput" accept="image/*">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Food Street Name</label>
+                <input type="text" class="form-control" id="foodStreetName" required>
+                <div class="invalid-feedback">Name is required.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Currency Symbol</label>
+                <input type="text" class="form-control" id="currency" maxlength="3" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Tax Percentage (%)</label>
+                <input type="number" min="0" max="100" step="0.1" class="form-control" id="taxPercent" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Order Number Prefix</label>
+                <input type="text" class="form-control" id="orderPrefix" maxlength="5" required>
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Save Settings</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Change Admin Password Card -->
+        <div class="col-12 col-lg-6">
+          <div class="card p-4 h-100">
+            <h5 class="mb-3">Change Admin Password</h5>
+            <form id="changePasswordForm" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="form-control" id="currentPassword" required>
+                <div class="invalid-feedback">Current password is required.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-control" id="newPassword" minlength="6" required>
+                <div class="invalid-feedback">New password must be at least 6 characters.</div>
+              </div>
+              <button type="submit" class="btn btn-outline-primary"><i class="bi bi-key me-1"></i>Update Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table QR Code Generator -->
+      <div class="card p-4 mb-4">
+        <h5 class="mb-3"><i class="bi bi-qr-code-scan me-2 text-primary"></i>Table QR Code Generator</h5>
+        <p class="text-muted small">Generate batch QR cards for printing. When a customer scans a card, their table number is automatically captured.</p>
+        
+        <div class="row g-3 align-items-end mb-4">
+          <div class="col-6 col-sm-3 col-md-2">
+            <label class="form-label">Start Table</label>
+            <input type="number" class="form-control" id="qrStart" min="1" value="1">
+          </div>
+          <div class="col-6 col-sm-3 col-md-2">
+            <label class="form-label">End Table</label>
+            <input type="number" class="form-control" id="qrEnd" min="1" value="10">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4">
+            <button class="btn btn-primary w-100" id="generateQrBtn"><i class="bi bi-gear-wide-connected me-1"></i>Generate QR Cards</button>
+          </div>
+          <div class="col-12 col-sm-6 col-md-4">
+            <button class="btn btn-accent w-100 d-none" id="printAllQrBtn"><i class="bi bi-printer me-1"></i>Print All QR Cards</button>
+          </div>
+        </div>
+
+        <div class="row g-3" id="qrGrid">
+          <div class="col-12 text-center text-muted py-4" id="qrPlaceholder">
+            <i class="bi bi-qr-code display-4 mb-2 d-block"></i>
+            Enter tables and click generate
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  import { initCommonLayout, getFoodStreetSettings } from "../js/common.js";
+  import { requireRole, logout, changePassword } from "../js/auth.js";
+  import { saveGlobalSettings } from "../js/admin.js";
+  import { isRequired, showToast, showLoader } from "../js/utils.js";
+
+  initCommonLayout();
+
+  let globalSettings = null;
+
+  requireRole("admin", "login.html").then(async () => {
+    globalSettings = await getFoodStreetSettings();
+    document.getElementById("foodStreetName").value = globalSettings.foodStreetName;
+    document.getElementById("currency").value = globalSettings.currency;
+    document.getElementById("taxPercent").value = globalSettings.taxPercent;
+    document.getElementById("orderPrefix").value = globalSettings.orderPrefix;
+    if (globalSettings.logoUrl) document.getElementById("logoPreview").src = globalSettings.logoUrl;
+  });
+
+  document.getElementById("logoInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) document.getElementById("logoPreview").src = URL.createObjectURL(file);
+  });
+
+  // Settings Save
+  const form = document.getElementById("settingsForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const foodStreetName = document.getElementById("foodStreetName").value.trim();
+    const currency = document.getElementById("currency").value.trim();
+    const taxPercent = document.getElementById("taxPercent").value;
+    const orderPrefix = document.getElementById("orderPrefix").value.trim();
+    const logoFile = document.getElementById("logoInput").files[0];
+
+    if (!isRequired(foodStreetName) || !isRequired(currency) || !isRequired(orderPrefix)) {
+      form.classList.add("was-validated");
+      return;
+    }
+
+    showLoader(true);
+    try {
+      await saveGlobalSettings({ foodStreetName, currency, taxPercent, orderPrefix, logoFile });
+      showToast("Settings saved successfully.", "success");
+      globalSettings = await getFoodStreetSettings();
+    } catch (err) {
+      showToast(err.message || "Failed to save settings.", "danger");
+    } finally {
+      showLoader(false);
+    }
+  });
+
+  // Password Change Save
+  const passwordForm = document.getElementById("changePasswordForm");
+  passwordForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const current = document.getElementById("currentPassword").value;
+    const next = document.getElementById("newPassword").value;
+
+    if (!isRequired(current) || next.length < 6) {
+      passwordForm.classList.add("was-validated");
+      return;
+    }
+    showLoader(true);
+    try {
+      await changePassword(current, next);
+      showToast("Password updated successfully.", "success");
+      passwordForm.reset();
+      passwordForm.classList.remove("was-validated");
+    } catch (err) {
+      showToast(err.message || "Failed to update password.", "danger");
+    } finally {
+      showLoader(false);
+    }
+  });
+
+  // QR Code Batch Generation
+  const generateQrBtn = document.getElementById("generateQrBtn");
+  const printAllQrBtn = document.getElementById("printAllQrBtn");
+  const qrGrid = document.getElementById("qrGrid");
+
+  generateQrBtn.addEventListener("click", async () => {
+    const start = parseInt(document.getElementById("qrStart").value, 10) || 1;
+    const end = parseInt(document.getElementById("qrEnd").value, 10) || 1;
+
+    if (start > end) {
+      showToast("Start table cannot be greater than end table.", "warning");
+      return;
+    }
+
+    qrGrid.innerHTML = "";
+    const appName = globalSettings?.foodStreetName || "FoodStreet";
+    const logoUrl = globalSettings?.logoUrl || "../assets/logos/default-logo.svg";
+    const baseOrderUrl = window.location.origin + "/index.html";
+
+    for (let tableNo = start; tableNo <= end; tableNo++) {
+      const orderUrl = `${baseOrderUrl}?table=${tableNo}`;
+      
+      const col = document.createElement("div");
+      col.className = "col-12 col-sm-6 col-md-4 col-lg-3 qr-print-card-wrapper";
+      col.innerHTML = `
+        <div class="card qr-print-card p-3 text-center border h-100 shadow-sm">
+          <div class="qr-card-header d-flex align-items-center justify-content-center mb-2">
+            <img src="${logoUrl}" alt="Logo" class="qr-card-logo" style="height: 30px; width: 30px; object-fit: contain; margin-right: 5px;" onerror="this.style.display='none'">
+            <span class="fw-bold text-primary qr-card-app-name">${appName}</span>
+          </div>
+          <div class="fs-4 fw-bold mb-2">Table ${tableNo}</div>
+          <div class="qr-code-container d-flex justify-content-center p-2 bg-white rounded border mb-3">
+            <canvas id="canvas-table-${tableNo}"></canvas>
+          </div>
+          <p class="small text-muted mb-3">Scan to browse menu & place order</p>
+          <div class="d-flex gap-2 justify-content-center qr-card-actions">
+            <button class="btn btn-sm btn-outline-primary print-single-btn" data-table="${tableNo}" title="Print QR Card"><i class="bi bi-printer"></i> Print</button>
+            <button class="btn btn-sm btn-outline-success download-single-btn" data-table="${tableNo}" title="Download PNG"><i class="bi bi-download"></i> Save</button>
+          </div>
+        </div>
+      `;
+      qrGrid.appendChild(col);
+
+      // Render the QR code on the generated canvas
+      const canvas = document.getElementById(`canvas-table-${tableNo}`);
+      try {
+        await QRCode.toCanvas(canvas, orderUrl, {
+          width: 160,
+          margin: 1,
+          color: {
+            dark: "#212529",
+            light: "#FFFFFF"
+          }
+        });
+      } catch (err) {
+        console.error("Failed to generate QR code for table " + tableNo, err);
+      }
+    }
+
+    printAllQrBtn.classList.remove("d-none");
+
+    // Bind event handlers to new buttons
+    qrGrid.querySelectorAll(".print-single-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        printSingleCard(btn.dataset.table);
+      });
+    });
+
+    qrGrid.querySelectorAll(".download-single-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        downloadSingleCard(btn.dataset.table);
+      });
+    });
+  });
+
+  function downloadSingleCard(tableNo) {
+    const canvas = document.getElementById(`canvas-table-${tableNo}`);
+    if (!canvas) return;
+    const url = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `table-${tableNo}-qr.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function printSingleCard(tableNo) {
+    const cards = qrGrid.querySelectorAll(".qr-print-card-wrapper");
+    cards.forEach((card) => {
+      const btn = card.querySelector(".print-single-btn");
+      if (btn && btn.dataset.table !== tableNo) {
+        card.classList.add("d-none-print");
+      }
+    });
+
+    window.print();
+
+    // Reset layout rules
+    cards.forEach((card) => {
+      card.classList.remove("d-none-print");
+    });
+  }
+
+  printAllQrBtn.addEventListener("click", () => {
+    window.print();
+  });
+
+  // Logout Action
+  document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    logout("login.html");
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

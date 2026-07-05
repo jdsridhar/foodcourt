@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Review your cart, adjust quantities, and place your FoodStreet order in one checkout.">
+<meta name="theme-color" content="#FF6B35">
+<meta name="robots" content="noindex">
+<title>Your Cart - FoodStreet</title>
+<link rel="icon" href="../assets/icons/favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar app-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="../index.html">
+      <i class="bi bi-arrow-left-circle me-2"></i><span data-app-name>FoodStreet</span>
+    </a>
+    <span class="fw-semibold"><i class="bi bi-geo-alt-fill text-primary me-1"></i>Table <span id="tableNumberDisplay">-</span></span>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <h4 class="mb-4"><i class="bi bi-cart3 me-2 text-primary"></i>Your Cart</h4>
+  <div class="row g-4">
+    <div class="col-12 col-lg-8">
+      <div id="cartContainer"></div>
+    </div>
+    <div class="col-12 col-lg-4">
+      <div class="card p-3 sticky-top" style="top: 90px;">
+        <h5 class="mb-3">Order Summary</h5>
+        <div id="cartSummary"></div>
+        <hr>
+        <form id="checkoutForm" class="needs-validation" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-control" id="customerName" placeholder="Guest" required>
+            <div class="invalid-feedback">Please enter your name.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="customerPhone" placeholder="10-digit mobile number" required>
+            <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100" id="placeOrderBtn">
+            <i class="bi bi-bag-check-fill me-1"></i>Place Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">&copy; 2026 <span data-app-name>FoodStreet</span>. All rights reserved.</footer>
+
+<script type="module">
+  import { initCommonLayout, getFoodStreetSettings, applyBranding } from "../js/common.js";
+  import { getTableNumber } from "../js/customer.js";
+  import { renderCartPage, getCart, getCartTotal, updateCartBadge } from "../js/cart.js";
+  import { placeOrder } from "../js/order.js";
+  import { db, COLLECTIONS } from "../js/firebase-config.js";
+  import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { isValidPhone, isRequired, formatCurrency, showToast, showLoader } from "../js/utils.js";
+
+  initCommonLayout();
+  updateCartBadge();
+  document.getElementById("tableNumberDisplay").textContent = getTableNumber() || "-";
+
+  let settings = { currency: "₹", taxPercent: 5, orderPrefix: "FS" };
+
+  async function loadStallNamesAndRender() {
+    const snap = await getDocs(collection(db, COLLECTIONS.STALLS));
+    const namesById = {};
+    snap.docs.forEach((d) => (namesById[d.id] = d.data().name));
+    renderCartPage(namesById);
+    applyTaxToSummary();
+  }
+
+  function applyTaxToSummary() {
+    const subtotal = getCartTotal();
+    const tax = (subtotal * settings.taxPercent) / 100;
+    const total = subtotal + tax;
+    const taxLine = document.getElementById("taxLine");
+    const grandTotal = document.getElementById("cartGrandTotal");
+    if (taxLine) taxLine.innerHTML = `<span>Tax (${settings.taxPercent}%)</span><span>${formatCurrency(tax, settings.currency)}</span>`;
+    if (grandTotal) grandTotal.textContent = formatCurrency(total, settings.currency);
+  }
+
+  getFoodStreetSettings().then((s) => {
+    settings = s;
+    applyBranding(s);
+    loadStallNamesAndRender();
+  });
+
+  const form = document.getElementById("checkoutForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+
+    if (!isValidPhone(phone) || getCart().length === 0) {
+      form.classList.add("was-validated");
+      if (getCart().length === 0) showToast("Your cart is empty.", "warning");
+      return;
+    }
+
+    showLoader(true);
+    try {
+      const checkoutId = await placeOrder({
+        tableNumber: getTableNumber(),
+        customerName: name || "Guest",
+        customerPhone: phone,
+        orderPrefix: settings.orderPrefix
+      });
+      window.location.href = `order-status.html?checkoutId=${checkoutId}`;
+    } catch (err) {
+      console.error(err);
+      showToast(err.message || "Failed to place order.", "danger");
+    } finally {
+      showLoader(false);
+    }
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

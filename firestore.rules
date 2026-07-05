@@ -1,0 +1,84 @@
+rules_version = '2';
+
+/**
+ * Firestore Security Rules - FoodStreet Digital Ordering System
+ *
+ * Roles are stored in users/{uid}.role as "manager" | "admin".
+ * Customers are NEVER authenticated - menu browsing and order placement/tracking
+ * must work for anonymous, unauthenticated requests.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userDoc().role == 'admin' && userDoc().disabled != true;
+    }
+
+    function isManager() {
+      return isSignedIn() && userDoc().role == 'manager' && userDoc().disabled != true;
+    }
+
+    function ownsStall(stallId) {
+      return isManager() && userDoc().stallId == stallId;
+    }
+
+    /* ---------------- users ---------------- */
+    match /users/{userId} {
+      // Users may read their own profile; admin can read every profile (to list managers).
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == userId);
+      // Only admin creates/updates/deletes user profile documents (manager accounts).
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() ||
+        (isSignedIn() && request.auth.uid == userId &&
+         request.resource.data.role == resource.data.role &&
+         request.resource.data.stallId == resource.data.stallId);
+    }
+
+    /* ---------------- stalls ---------------- */
+    match /stalls/{stallId} {
+      // Public read so the customer QR menu works without login.
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() || ownsStall(stallId);
+      allow delete: if isAdmin();
+    }
+
+    /* ---------------- menuItems ---------------- */
+    match /menuItems/{itemId} {
+      // Public read so customers can browse the menu without login.
+      allow read: if true;
+      allow create: if isAdmin() || ownsStall(request.resource.data.stallId);
+      allow update, delete: if isAdmin() || ownsStall(resource.data.stallId);
+    }
+
+    /* ---------------- orders ---------------- */
+    match /orders/{orderId} {
+      // Public read so an unauthenticated customer can track their own order via checkoutId.
+      allow read: if true;
+      // Anyone (including unauthenticated customers) can create an order, but only as "pending"
+      // and only with the required fields - customers cannot forge a different status.
+      allow create: if request.resource.data.status == 'pending'
+        && request.resource.data.stallId is string
+        && request.resource.data.items is list
+        && request.resource.data.subtotal is number;
+      // Only the owning stall manager (or admin) can change order status; customers cannot edit.
+      allow update: if isAdmin() || ownsStall(resource.data.stallId);
+      allow delete: if isAdmin();
+    }
+
+    /* ---------------- settings ---------------- */
+    match /settings/{settingId} {
+      // Public read so currency/tax/branding show up on the customer site.
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
