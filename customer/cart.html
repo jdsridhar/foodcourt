@@ -85,9 +85,14 @@
 
   const tableInput = document.getElementById("tableNumberInput");
   const tableDisplay = document.getElementById("tableNumberDisplay");
+  const nameInput = document.getElementById("customerName");
+  const phoneInput = document.getElementById("customerPhone");
+
   const initialTable = getTableNumber();
   if (tableInput) tableInput.value = initialTable;
   if (tableDisplay) tableDisplay.textContent = initialTable || "Not detected";
+  if (nameInput) nameInput.value = localStorage.getItem("foodstreet_customer_name") || "";
+  if (phoneInput) phoneInput.value = localStorage.getItem("foodstreet_customer_phone") || "";
 
   if (tableInput && tableDisplay) {
     tableInput.addEventListener("input", () => {
@@ -125,8 +130,8 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const tableNumber = tableInput ? tableInput.value.trim() : "";
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("customerPhone").value.trim();
+    const name = nameInput ? nameInput.value.trim() : "";
+    const phone = phoneInput ? phoneInput.value.trim() : "";
 
     if (!isValidPhone(phone) || !isRequired(tableNumber) || getCart().length === 0) {
       form.classList.add("was-validated");
@@ -142,7 +147,9 @@
         customerPhone: phone,
         orderPrefix: settings.orderPrefix
       });
-      // Save the updated table number back to sessionStorage in case they modified it
+      // Save customer details back to localStorage for convenience
+      localStorage.setItem("foodstreet_customer_name", name);
+      localStorage.setItem("foodstreet_customer_phone", phone);
       sessionStorage.setItem("foodstreet_table_number", tableNumber);
       window.location.href = `order-status.html?checkoutId=${checkoutId}`;
     } catch (err) {
