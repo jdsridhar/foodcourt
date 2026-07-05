@@ -117,6 +117,7 @@ export function trackCheckout(checkoutId) {
             <div>
               <strong>${escapeHtml(stallNames[order.stallId])}</strong>
               <span class="text-muted small ms-2">#${escapeHtml(order.orderNumber)}</span>
+              <span class="badge bg-secondary-subtle text-dark ms-2"><i class="bi bi-geo-alt-fill text-primary me-1"></i>Table ${escapeHtml(order.tableNumber)}</span>
             </div>
             <span class="badge ${statusBadgeClass(order.status)}">${capitalize(order.status)}</span>
           </div>
