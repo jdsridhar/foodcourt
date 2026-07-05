@@ -260,7 +260,7 @@
     qrGrid.innerHTML = "";
     const appName = globalSettings?.foodStreetName || "FoodStreet";
     const logoUrl = globalSettings?.logoUrl || "../assets/logos/default-logo.svg";
-    const baseOrderUrl = window.location.origin + "/index.html";
+    const baseOrderUrl = window.location.origin + "/";
 
     for (let tableNo = start; tableNo <= end; tableNo++) {
       const orderUrl = `${baseOrderUrl}?table=${tableNo}`;
